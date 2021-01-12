@@ -16,7 +16,10 @@ $.prototype.removeAttr = function (attrName) {
 
 $.prototype.getAttr = function (attrName) {
   for (let i = 0; i < this.length; i++) {
-    this[i].getAttribute(attrName);
+    if (!this[i].getAttribute(attrName)) {
+      continue;
+    }
+    return this[i].getAttribute(attrName);
   }
   return this[0];
 };

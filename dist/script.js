@@ -100,10 +100,115 @@ __webpack_require__.r(__webpack_exports__);
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropdown = function () {
   for (let i = 0; i < this.length; i++) {
-    const id = Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).getAttr('id').id;
+    const id = Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).getAttr('id');
     Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(() => {
       Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`[data-toggle-id=${id}]`).fadeToggle(300);
     });
+  }
+};
+
+Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])('.dropdown-toggle').dropdown();
+
+/***/ }),
+
+/***/ "./src/js/lib/components/modal.js":
+/*!****************************************!*\
+  !*** ./src/js/lib/components/modal.js ***!
+  \****************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
+
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function (created) {
+  for (let i = 0; i < this.length; i++) {
+    const target = Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).getAttr('data-target');
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(e => {
+      e.preventDefault();
+      Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeIn(500);
+      document.body.style.overflow = 'hidden';
+    });
+    const closeElements = document.querySelectorAll(`${target} [data-close]`);
+    closeElements.forEach(elem => {
+      Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(elem).click(() => {
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeOut(500);
+        document.body.style.overflow = '';
+
+        if (created) {
+          setTimeout(() => {
+            document.querySelector(target).remove();
+          }, 500);
+        }
+      });
+    });
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).click(e => {
+      if (e.target.classList.contains('modal')) {
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeOut(500);
+        document.body.style.overflow = '';
+
+        if (created) {
+          document.querySelector(target).remove();
+        }
+      }
+    });
+  }
+};
+
+Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])('[data-toggle="modal"]').modal();
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({
+  textTitle,
+  textBody,
+  btnCount,
+  btnSettings
+} = {}) {
+  for (let i = 0; i < this.length; i++) {
+    let modal = document.createElement('div');
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(modal).addClass('modal');
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(modal).setAttr('id', Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).getAttr('data-target').slice(1));
+    const buttons = [];
+
+    for (let j = 0; j < btnCount; j++) {
+      let btn = document.createElement('button');
+      Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(btn).addClass('btn', ...btnSettings[j][1]);
+      btn.textContent = btnSettings[j][0];
+
+      if (btnSettings[j][2]) {
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(btn).setAttr('data-close', 'true');
+      }
+
+      if (btnSettings[j][3] && typeof btnSettings[j][3] === 'function') {
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(btn).click(btnSettings[j][3]);
+      }
+
+      buttons.push(btn);
+    }
+
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(modal).html(`
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button class="close" data-close>
+                    <span>&times;</span>
+                </button>
+                <div class="modal-header">
+                    <div class="modal-title">
+                        ${textTitle}
+                    </div>
+                </div>
+                <div class="modal-body">
+                    ${textBody}
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    `);
+    modal.querySelector(".modal-footer").append(...buttons);
+    document.body.appendChild(modal);
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal(true);
+    Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(Object(_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).getAttr('data-target')).fadeIn(500);
   }
 };
 
@@ -161,6 +266,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/actions */ "./src/js/lib/modules/actions.js");
 /* harmony import */ var _modules_effects__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/effects */ "./src/js/lib/modules/effects.js");
 /* harmony import */ var _components_dropdown__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/dropdown */ "./src/js/lib/components/dropdown.js");
+/* harmony import */ var _components_modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/modal */ "./src/js/lib/components/modal.js");
+
 
 
 
@@ -330,7 +437,11 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.removeAttr = function (a
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.getAttr = function (attrName) {
   for (let i = 0; i < this.length; i++) {
-    this[i].getAttribute(attrName);
+    if (!this[i].getAttribute(attrName)) {
+      continue;
+    }
+
+    return this[i].getAttribute(attrName);
   }
 
   return this[0];
@@ -598,17 +709,16 @@ Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('[data-count="second"]'
 Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('button').eq(2).click(() => {
   Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('.w-500').fadeToggle(800);
 });
-Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('.wrap').html(`
-  <div class="dropdown">
-    <div class="btn btn-primary dropdown-toggle" id="dropdownMenuButton">Dropdown button</div>
-    <div class="dropdown-menu" data-toggle-id="dropdownMenuButton">
-      <a href="#" class="dropdown-item">Action</a>
-      <a href="#" class="dropdown-item">Action #2</a>
-      <a href="#" class="dropdown-item">Action #3</a>
-    </div>
-  </div>
-`);
-Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('.dropdown-toggle').dropdown();
+Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('#trigger').click(() => Object(_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])('#trigger').createModal({
+  textTitle: 'Modal Title',
+  textBody: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum minus doloremque nesciunt enim rem quam corporis? Dolorem pariatur magnam distinctio perferendis. Ratione dolorem voluptates iusto facilis odit veritatis, suscipit voluptatibus!',
+  btnCount: 3,
+  btnSettings: [['Close', ['btn-danger', 'mr-10'], true], ['Save changes', ['btn-success'], false, () => {
+    alert('Данные сохранены');
+  }], ['Another btn', ['btn-warning', 'ml-10'], false, () => {
+    alert('Hello World');
+  }]]
+}));
 
 /***/ })
 

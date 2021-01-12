@@ -27,7 +27,9 @@ $.prototype.modal = function (created) {
         $(target).fadeOut(500);
         document.body.style.overflow = '';
         if (created) {
-          document.querySelector(target).remove();
+          setTimeout(() => {
+            document.querySelector(target).remove();
+          }, 500);
         }
       }
     });

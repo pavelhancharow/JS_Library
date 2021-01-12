@@ -150,7 +150,9 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function (create
         document.body.style.overflow = '';
 
         if (created) {
-          document.querySelector(target).remove();
+          setTimeout(() => {
+            document.querySelector(target).remove();
+          }, 500);
         }
       }
     });

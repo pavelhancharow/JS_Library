@@ -9,4 +9,4 @@
 
 ## Check it out
 
-https://pavelhancharow.github.io/JS_Library/tree/test-project/index.html
+https://pavelhancharow.github.io/JS_Library/tree/test-project/test/index.html

@@ -4,7 +4,7 @@
 
 ## Tasks
 
-- Work with slider, accordion, tabs;
+- Work with slider, accordion, tabs, cards, modal;
 - HTTP-requests: POST;
 
 ## Check it out
